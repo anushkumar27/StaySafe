@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     txtSpeechInput.setText(result.get(0));
                     System.out.println("I am Trying to send a command");
-                    sendCommand("*" + result.get(0) + "*");
+                    sendCommand(processResult(result.get(0)));
                 }
                 break;
             }
@@ -96,11 +96,25 @@ public class MainActivity extends Activity {
         }
     }
 
+    private String processResult(String s) {
+        String result = "";
+        if(s.toLowerCase().indexOf("right") != -1){
+            result = "3";
+        }else if(s.toLowerCase().indexOf("left") != -1){
+            result = "1";
+        }else if(s.toLowerCase().indexOf("caution") != -1){
+            result = "2";
+        }else if(s.toLowerCase().indexOf("warning") != -1){
+            result = "2";
+        }
+        return result;
+    }
+
     public void sendCommand(String command){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
         String link = URLEncoder.encode(command);
-        String url ="http://192.168.0.100/staySafe/command.php?command="+link;
+        String url ="http://192.168.0.101/command.php?command="+link;
         System.out.println("My URL: " + url);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
